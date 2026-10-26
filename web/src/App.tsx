@@ -23,12 +23,14 @@ import {
   Zap,
 } from 'lucide-react'
 import './App.css'
+import './palette.css'
+import './maven.css'
 
 const assets = [
-  { symbol: 'BTC', name: 'Bitcoin', color: '#f59e62', amount: '57 800 ₽', share: 45 },
-  { symbol: 'USDT', name: 'Tether', color: '#55bca5', amount: '38 500 ₽', share: 30 },
-  { symbol: 'ETH', name: 'Ethereum', color: '#7d83e8', amount: '19 300 ₽', share: 15 },
-  { symbol: 'SOL', name: 'Solana', color: '#bd83df', amount: '12 800 ₽', share: 10 },
+  { symbol: 'BTC', name: 'Bitcoin', color: '#ff8600', amount: '57 800 ₽', share: 45 },
+  { symbol: 'USDT', name: 'Tether', color: '#0aa851', amount: '38 500 ₽', share: 30 },
+  { symbol: 'ETH', name: 'Ethereum', color: '#4882ff', amount: '19 300 ₽', share: 15 },
+  { symbol: 'SOL', name: 'Solana', color: '#ff8488', amount: '12 800 ₽', share: 10 },
 ]
 
 const steps = [
@@ -135,26 +137,29 @@ function App() {
       </header>
 
       <main>
-        <section className="hero section-shell">
-          <div className="hero-copy">
-            <div className="eyebrow"><span className="status-dot" /> Крипта без лишнего</div>
-            <h1>Крипта.<br /><span className="text-gradient">Просто.</span></h1>
-            <p className="hero-lead">Переводы родным, оплата за границей и накопления. Всё в одном спокойном приложении — без биржевого шума и сложных терминов.</p>
-            <div className="hero-actions"><a className="button" href="#start">Создать кошелёк <ArrowRight size={18} /></a><a className="text-link" href="#how">Посмотреть, как работает <ArrowDownLeft size={17} /></a></div>
-            <div className="hero-proof"><span className="proof-icon"><Fingerprint size={21} /></span><span><strong>Некастодиальный кошелёк</strong><small>Ключи остаются на вашем устройстве</small></span></div>
-          </div>
-          <WalletPreview />
-        </section>
+        <div className="hero-surface">
+          <section className="hero section-shell">
+            <div className="hero-copy">
+              <div className="eyebrow"><span className="status-dot" /> Крипта без лишнего</div>
+              <h1>Крипта.<br /><span className="text-gradient serif-line">Просто.</span></h1>
+              <p className="hero-lead">Переводы родным, оплата за границей и накопления. Всё в одном спокойном приложении — без биржевого шума и сложных терминов.</p>
+              <div className="hero-actions"><a className="button" href="#start">Создать кошелёк <ArrowRight size={18} /></a><a className="text-link" href="#how">Посмотреть, как работает <ArrowDownLeft size={17} /></a></div>
+              <div className="hero-proof"><span className="proof-icon"><Fingerprint size={21} /></span><span><strong>Некастодиальный кошелёк</strong><small>Ключи остаются на вашем устройстве</small></span></div>
+            </div>
+            <WalletPreview />
+          </section>
 
-        <section className="metrics section-shell" aria-label="Ключевые особенности">
-          <div><strong>0</strong><span>ключей на наших серверах</span></div>
-          <div><strong>24/7</strong><span>доступ к своим активам</span></div>
-          <div><strong>12</strong><span>слов для восстановления</span></div>
-          <div><strong>1</strong><span>понятное приложение</span></div>
-        </section>
+          <section className="metrics section-shell" aria-label="Ключевые особенности">
+            <div><strong>0</strong><span>ключей на наших серверах</span></div>
+            <div><strong>24/7</strong><span>доступ к своим активам</span></div>
+            <div><strong>12</strong><span>слов для восстановления</span></div>
+            <div><strong>1</strong><span>понятное приложение</span></div>
+          </section>
+        </div>
+        <div className="light-surface">
 
         <section className="section-shell section" id="features">
-          <div className="section-heading"><div><span className="kicker">Всё нужное. Ничего лишнего.</span><h2>Финансы,<br />которые видно.</h2></div><p>Баланс, динамика и состав портфеля — на одном экране. Не нужно быть трейдером, чтобы понимать, что происходит с вашими деньгами.</p></div>
+          <div className="section-heading"><div><span className="kicker">Всё нужное. Ничего лишнего.</span><h2>Финансы,<br /><span className="serif-line">которые видно.</span></h2></div><p>Баланс, динамика и состав портфеля — на одном экране. Не нужно быть трейдером, чтобы понимать, что происходит с вашими деньгами.</p></div>
           <div className="bento">
             <article className="bento-card glass bento-portfolio">
               <div className="card-heading"><span className="feature-icon violet"><Layers3 size={19} /></span><span>Портфель</span><span className="soft-badge">пример</span></div>
@@ -190,31 +195,34 @@ function App() {
         </section>
 
         <section className="section-shell section" id="how">
-          <div className="section-heading compact"><div><span className="kicker">Начать просто</span><h2>Три шага.<br />И вы в Depo.</h2></div><p>Никакой финансовой терминологии на первом экране. Только то, что нужно для безопасного старта.</p></div>
+          <div className="section-heading compact"><div><span className="kicker">Начать просто</span><h2>Три шага.<br /><span className="serif-line">И вы в Depo.</span></h2></div><p>Никакой финансовой терминологии на первом экране. Только то, что нужно для безопасного старта.</p></div>
           <div className="steps">{steps.map((step) => { const Icon = step.icon; return <article className="step glass" key={step.number}><div className="step-top"><span>{step.number}</span><Icon size={23} /></div><h3>{step.title}</h3><p>{step.text}</p></article> })}</div>
         </section>
+        </div>
 
-        <section className="asset-band"><div className="asset-track">{[...assets, ...assets, { symbol: 'TON', name: 'Toncoin', color: '#68b8e8', amount: '', share: 0 }].map((asset, index) => <span key={`${asset.symbol}-${index}`}><AssetIcon symbol={asset.symbol} color={asset.color} />{asset.name}<small>{asset.symbol}</small></span>)}</div></section>
+        <section className="asset-band"><div className="asset-track">{[...assets, ...assets, { symbol: 'TON', name: 'Toncoin', color: '#4882ff', amount: '', share: 0 }].map((asset, index) => <span key={`${asset.symbol}-${index}`}><AssetIcon symbol={asset.symbol} color={asset.color} />{asset.name}<small>{asset.symbol}</small></span>)}</div></section>
 
         <section className="section-shell section security-section" id="security">
           <div className="security-panel">
-            <div className="security-copy"><span className="kicker kicker-dark">Безопасность без обещаний</span><h2>Мы не храним.<br /><span>Вы управляете.</span></h2><p>Seed-фраза создаётся и шифруется на вашем устройстве. У Depo нет копии ключей и доступа к вашим средствам.</p><div className="security-points"><span><ShieldCheck size={18} /> Локальное шифрование</span><span><KeyRound size={18} /> Восстановление по 12 словам</span><span><Globe2 size={18} /> Проверяемые публичные данные</span></div></div>
+            <div className="security-copy"><span className="kicker kicker-dark">Безопасность без обещаний</span><h2>Мы не храним.<br /><span className="serif-line">Вы управляете.</span></h2><p>Seed-фраза создаётся и шифруется на вашем устройстве. У Depo нет копии ключей и доступа к вашим средствам.</p><div className="security-points"><span><ShieldCheck size={18} /> Локальное шифрование</span><span><KeyRound size={18} /> Восстановление по 12 словам</span><span><Globe2 size={18} /> Проверяемые публичные данные</span></div></div>
             <div className="security-visual"><div className="security-orbit orbit-one" /><div className="security-orbit orbit-two" /><div className="security-core glass-dark"><Fingerprint size={52} /><strong>Только вы</strong><span>владеете ключами</span></div><span className="security-tag tag-one"><Check size={13} /> На устройстве</span><span className="security-tag tag-two"><LockKeyhole size={13} /> Не передаётся</span></div>
           </div>
           <div className="honest-warning"><span><Sparkles size={18} /></span><p><strong>Честно:</strong> если вы потеряете 12 слов, восстановить доступ не сможет никто. Полный контроль означает полную ответственность.</p></div>
         </section>
 
+        <div className="light-surface lower-surface">
         <section className="section-shell section use-cases">
-          <div className="section-heading compact"><div><span className="kicker">Для жизни, не только для рынка</span><h2>Один кошелёк.<br />Много сценариев.</h2></div></div>
+          <div className="section-heading compact"><div><span className="kicker">Для жизни, не только для рынка</span><h2>Один кошелёк.<br /><span className="serif-line">Много сценариев.</span></h2></div></div>
           <div className="use-grid"><article><Globe2 /><h3>Переводы без границ</h3><p>Родным в другой стране или оплата услуг — без банковского графика.</p><span>24/7 · из телефона</span></article><article><PiggyBank /><h3>Накопления с целью</h3><p>Отдельные копилки и регулярные пополнения в удобном темпе.</p><span>Без сроков · без штрафов</span></article><article><CircleDollarSign /><h3>Оплата работы</h3><p>Покажите адрес или QR-код. Сумма и статус всегда под рукой.</p><span>BTC · USDT · другие активы</span></article></div>
         </section>
 
         <section className="section-shell section faq-section" id="faq">
-          <div className="faq-title"><span className="kicker">Без мелкого шрифта</span><h2>Спросите<br />честно.</h2><p>Коротко отвечаем на то, что действительно важно перед первым переводом.</p></div>
+          <div className="faq-title"><span className="kicker">Без мелкого шрифта</span><h2>Спросите<br /><span className="serif-line">честно.</span></h2><p>Коротко отвечаем на то, что действительно важно перед первым переводом.</p></div>
           <div className="faq-list">{faqs.map(([question, answer], index) => <article className={openFaq === index ? 'faq-item faq-open' : 'faq-item'} key={question}><button aria-expanded={openFaq === index} onClick={() => setOpenFaq(openFaq === index ? -1 : index)}><span>{question}</span><ChevronDown size={20} /></button><div className="faq-answer"><p>{answer}</p></div></article>)}</div>
         </section>
+        </div>
 
-        <section className="section-shell start-section" id="start"><div className="start-card"><span className="start-orb start-orb-one" /><span className="start-orb start-orb-two" /><div className="start-icon"><WalletCards size={27} /></div><span className="kicker kicker-dark">Ваши ключи. Ваши правила.</span><h2>Начните с одного<br />понятного кошелька.</h2><p>Создайте Depo за пару минут и посмотрите всё изнутри.</p><a className="button button-light" href="https://depowallet.com/account">Создать кошелёк <ArrowUpRight size={18} /></a><small>Бесплатно · Без анкет · С ответственностью за свою seed-фразу</small></div></section>
+        <section className="section-shell start-section" id="start"><div className="start-card"><span className="start-orb start-orb-one" /><span className="start-orb start-orb-two" /><div className="start-icon"><WalletCards size={27} /></div><span className="kicker kicker-dark">Ваши ключи. Ваши правила.</span><h2>Начните с одного<br /><span className="serif-line">понятного кошелька.</span></h2><p>Создайте Depo за пару минут и посмотрите всё изнутри.</p><a className="button button-light" href="https://depowallet.com/account">Создать кошелёк <ArrowUpRight size={18} /></a><small>Бесплатно · Без анкет · С ответственностью за свою seed-фразу</small></div></section>
       </main>
 
       <footer className="footer section-shell"><div className="footer-main"><div className="footer-brand"><Logo /><p>Крипта. Просто.<br />Кошелёк, ключи которого принадлежат вам.</p><span className="system-status"><i /> Все системы работают</span></div><div className="footer-column"><strong>Продукт</strong><a href="#features">Возможности</a><a href="#how">Как это работает</a><a href="#security">Безопасность</a></div><div className="footer-column"><strong>Помощь</strong><a href="#faq">Вопросы и ответы</a><a href="#security">Что такое 12 слов</a><a href="https://status.depowallet.com">Статус сети</a></div><div className="footer-column"><strong>Документы</strong><a href="#footer-note">Условия использования</a><a href="#footer-note">Конфиденциальность</a><a href="#footer-note">Риски</a></div></div><div className="footer-bottom" id="footer-note"><span>© 2026 Depo Wallet</span><p>Криптовалюты связаны с рисками. Depo никогда не попросит вашу seed-фразу.</p><span>depowallet.com</span></div></footer>

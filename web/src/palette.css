@@ -1,0 +1,86 @@
+/* Avon-inspired product palette: warm neutrals + blue/coral/orange/green. */
+:root {
+  --ink: #2a2a2a;
+  --muted: #707070;
+  --violet: #4882ff;
+  --mint: #d9ffe9;
+  --coral: #ff8488;
+  --blue: #dae8ff;
+  --line: rgba(42, 42, 42, 0.1);
+}
+
+html { background: #f7f7f7; }
+.site {
+  background:
+    radial-gradient(circle at 72% 4%, rgba(255,255,255,.95), transparent 28%),
+    #f7f7f7;
+  color: #2a2a2a;
+}
+::selection { background: #dae8ff; color: #2a2a2a; }
+
+.ambient-one {
+  background: radial-gradient(circle at 35% 45%, rgba(72,130,255,.19), rgba(217,255,233,.35) 48%, transparent 70%);
+}
+.ambient-two {
+  background: radial-gradient(circle, rgba(255,132,136,.14), rgba(255,134,0,.05) 45%, transparent 70%);
+}
+.text-gradient {
+  background: linear-gradient(105deg, #4882ff 5%, #6f8ffb 36%, #ff8488 70%, #ff8600);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.proof-icon,
+.step-top,
+.use-grid svg,
+.footer-column a:hover,
+.faq-open button svg { color: #4882ff; }
+
+.wallet-scene::before {
+  background: radial-gradient(ellipse at 40% 40%, rgba(72,130,255,.21), rgba(217,255,233,.34) 42%, rgba(255,132,136,.14) 61%, transparent 72%);
+}
+.floating-chip-btc span { color: #ff8600; }
+.floating-chip-safe { color: #39725a; }
+.floating-chip-safe svg { color: #0aa851; }
+.gain { color: #0a8442; }
+.wallet-balance .gain,
+.portfolio-total .gain { background: #d9ffe9; }
+
+.portfolio-chart stop[stop-color="#756cf5"] { stop-color: #4882ff; }
+.portfolio-chart stop[stop-color="#668af3"] { stop-color: #4882ff; }
+.portfolio-chart stop[stop-color="#e77da6"] { stop-color: #ff8488; }
+.portfolio-chart circle { fill: #4882ff; }
+.portfolio-chart circle:last-of-type { stroke: #ffffff; }
+
+.feature-icon.violet { background: #dae8ff; color: #4882ff; }
+.feature-icon.mint { background: #d9ffe9; color: #0aa851; }
+.feature-icon.coral { background: #ffe1e1; color: #e8696d; }
+.feature-icon.blue { background: #dae8ff; color: #4882ff; }
+.bento-savings .savings-top strong { color: #4882ff; }
+.progress span { background: linear-gradient(90deg, #4882ff, #ff8488); }
+.weekly-bars i { background: linear-gradient(180deg, #4882ff, #dae8ff); }
+.weekly-bars i:nth-child(3n+2) { background: linear-gradient(180deg, #ff8488, #ffe1e1); }
+.weekly-bars i:nth-child(3n) { background: linear-gradient(180deg, #0aa851, #d9ffe9); }
+
+.route-avatar { background: #dae8ff; color: #4882ff; }
+.route-avatar-mint { background: #d9ffe9; color: #0aa851; }
+.route-line { color: #4882ff; }
+.route-line span { border-top-color: #b8cced; }
+.transfer-status { background: #d9ffe9; color: #0a8442; }
+
+.security-panel {
+  background:
+    radial-gradient(circle at 85% 10%, rgba(72,130,255,.25), transparent 40%),
+    radial-gradient(circle at 20% 100%, rgba(255,132,136,.08), transparent 42%),
+    #2a2a2a;
+}
+.security-copy h2 span { color: #a9c2ff; }
+.security-points svg { color: #8fd9b2; }
+.security-core svg { color: #a9c2ff; }
+.honest-warning > span { background: #dae8ff; color: #4882ff; }
+
+.start-card { background: #2a2a2a; }
+.start-orb-one { background: radial-gradient(circle, rgba(72,130,255,.4), transparent 68%); }
+.start-orb-two { background: radial-gradient(circle, rgba(255,132,136,.28), rgba(255,134,0,.08) 45%, transparent 68%); }
+.start-icon { color: #dae8ff; }
+.system-status { background: #d9ffe9; color: #0a8442; }
+.system-status i { background: #0aa851; }
