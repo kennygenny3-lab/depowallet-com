@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import {
   ArrowDownLeft,
   ArrowRight,
@@ -25,6 +25,7 @@ import {
 import './App.css'
 import './palette.css'
 import './maven.css'
+import './charts.css'
 
 const assets = [
   { symbol: 'BTC', name: 'Bitcoin', color: '#ff8600', amount: '57 800 ₽', share: 45 },
@@ -54,26 +55,68 @@ function AssetIcon({ symbol, color }: { symbol: string; color: string }) {
   return <span className="asset-icon" style={{ backgroundColor: color }}>{symbol.slice(0, 1)}</span>
 }
 
-function PortfolioChart() {
+const chartSeries = {
+  '6 мес': { values: [78, 85, 82, 96, 104, 112, 128], labels: ['май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя'] },
+  '1 год': { values: [65, 70, 82, 76, 89, 94, 102, 98, 110, 116, 121, 128], labels: ['ноя 25', 'дек 25', 'янв 26', 'фев 26', 'мар 26', 'апр 26', 'май 26', 'июн 26', 'июл 26', 'авг 26', 'сен 26', 'окт 26'] },
+  'всё': { values: [42, 55, 48, 68, 60, 75, 82, 79, 94, 89, 105, 111, 118, 128], labels: ['2021', '', '2022', '', '2023', '', '2024', '', '2025', '', '2026', '', '', 'сейчас'] },
+}
+type ChartPeriod = keyof typeof chartSeries
+
+function chartPath(points: readonly { x: number; y: number }[]) {
+  return points.slice(1).reduce((path, point, index) => {
+    const previous = points[index]!
+    const middle = (previous.x + point.x) / 2
+    return `${path} C ${middle} ${previous.y}, ${middle} ${point.y}, ${point.x} ${point.y}`
+  }, `M ${points[0]!.x} ${points[0]!.y}`)
+}
+
+function PortfolioChart({ withControls = false }: { withControls?: boolean }) {
+  const [period, setPeriod] = useState<ChartPeriod>('6 мес')
+  const [active, setActive] = useState<number | null>(null)
+  const gradientId = useId().replace(/:/g, '')
+  const data = chartSeries[period]
+  const previousValues = data.values.map((value, index) => value * (0.88 + (index % 3) * 0.025))
+  const max = Math.max(...data.values, ...previousValues) * 1.08
+  const min = Math.min(...data.values, ...previousValues) * 0.88
+  const toPoints = (values: number[]) => values.map((value, index) => ({
+    x: index * (620 / (values.length - 1)),
+    y: 16 + ((max - value) / (max - min)) * 137,
+  }))
+  const points = toPoints(data.values)
+  const previousPoints = toPoints(previousValues)
+  const line = chartPath(points)
+  const area = `${line} L 620 190 L 0 190 Z`
+  const last = points[points.length - 1]!
+  const activePoint = active == null ? null : points[active]!
+  const tooltipX = activePoint ? Math.max(3, Math.min(469, activePoint.x - 74)) : 0
+  const tooltipY = activePoint ? Math.max(3, activePoint.y - 53) : 0
+  const labelCount = Math.min(6, data.labels.length)
+  const labelIndexes = Array.from({ length: labelCount }, (_, index) => Math.round(index * (data.labels.length - 1) / (labelCount - 1)))
+
+  function handlePointer(event: React.PointerEvent<SVGSVGElement>) {
+    if (event.pointerType !== 'mouse') return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    const x = ((event.clientX - bounds.left) / bounds.width) * 620
+    setActive(Math.max(0, Math.min(data.values.length - 1, Math.round(x / (620 / (data.values.length - 1))))))
+  }
+
   return (
-    <svg className="portfolio-chart" viewBox="0 0 620 190" role="img" aria-label="Пример роста портфеля за шесть месяцев">
-      <defs>
-        <linearGradient id="heroArea" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#756cf5" stopOpacity="0.34" />
-          <stop offset="100%" stopColor="#756cf5" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="heroLine" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#668af3" />
-          <stop offset="55%" stopColor="#756cf5" />
-          <stop offset="100%" stopColor="#e77da6" />
-        </linearGradient>
-      </defs>
-      {[35, 85, 135].map((y) => <line key={y} x1="0" y1={y} x2="620" y2={y} className="chart-grid" />)}
-      <path d="M0 151 C35 145 50 122 86 129 C126 137 143 111 178 116 C215 121 234 79 270 91 C306 103 335 78 367 83 C410 90 423 43 459 58 C497 73 513 37 548 43 C578 48 596 25 620 21 L620 190 L0 190 Z" fill="url(#heroArea)" />
-      <path d="M0 151 C35 145 50 122 86 129 C126 137 143 111 178 116 C215 121 234 79 270 91 C306 103 335 78 367 83 C410 90 423 43 459 58 C497 73 513 37 548 43 C578 48 596 25 620 21" fill="none" stroke="url(#heroLine)" strokeWidth="4" strokeLinecap="round" />
-      <circle cx="620" cy="21" r="11" fill="#756cf5" opacity="0.16" />
-      <circle cx="620" cy="21" r="5" fill="#756cf5" stroke="white" strokeWidth="3" />
-    </svg>
+    <div className="portfolio-chart-wrap">
+      {withControls && <div className="chart-toolbar"><span><i /> Этот период <i /> Прошлый</span><div className="chart-periods">{(Object.keys(chartSeries) as ChartPeriod[]).map((item) => <button type="button" key={item} className={period === item ? 'chart-period chart-period-active' : 'chart-period'} aria-pressed={period === item} onClick={() => { setPeriod(item); setActive(null) }}>{item}</button>)}</div></div>}
+      <svg key={period} className="portfolio-chart" viewBox="0 0 620 190" role="img" aria-label={`Демонстрационный график портфеля: ${period}`} onPointerMove={handlePointer} onPointerLeave={() => setActive(null)}>
+        <defs>
+          <linearGradient id={`${gradientId}-area`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4882ff" stopOpacity="0.3" /><stop offset="100%" stopColor="#4882ff" stopOpacity="0" /></linearGradient>
+          <linearGradient id={`${gradientId}-line`} x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#4882ff" /><stop offset="65%" stopColor="#7188f6" /><stop offset="100%" stopColor="#ff8488" /></linearGradient>
+        </defs>
+        {[35, 85, 135].map((y) => <line key={y} x1="0" y1={y} x2="620" y2={y} className="chart-grid" />)}
+        <path d={area} fill={`url(#${gradientId}-area)`} className="chart-area-animated" />
+        <path d={chartPath(previousPoints)} fill="none" stroke="#ff8488" strokeOpacity="0.52" strokeWidth="2" strokeDasharray="5 7" strokeLinecap="round" />
+        <path d={line} fill="none" stroke={`url(#${gradientId}-line)`} strokeWidth="4" strokeLinecap="round" className="chart-line-animated" />
+        <circle cx={last.x} cy={last.y} r="11" fill="#4882ff" opacity="0.14" /><circle cx={last.x} cy={last.y} r="5" fill="#4882ff" stroke="white" strokeWidth="3" />
+        {activePoint && active != null && <g className="chart-tooltip" pointerEvents="none"><line x1={activePoint.x} y1="15" x2={activePoint.x} y2="165" stroke="#4882ff" strokeOpacity="0.35" strokeDasharray="3 5" /><circle cx={activePoint.x} cy={activePoint.y} r="6" fill="#4882ff" stroke="white" strokeWidth="2" /><rect x={tooltipX} y={tooltipY} width="151" height="45" rx="10" fill="#2a2a2a" /><text className="chart-tooltip-date" x={tooltipX + 11} y={tooltipY + 16}>{data.labels[active]}</text><text className="chart-tooltip-value" x={tooltipX + 11} y={tooltipY + 34}>{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(data.values[active]! / 128 * 128430)}</text></g>}
+      </svg>
+      <div className="chart-months">{labelIndexes.map((index) => <span key={index}>{data.labels[index]}</span>)}</div>
+    </div>
   )
 }
 
@@ -85,8 +128,7 @@ function WalletPreview() {
       <div className="wallet-preview glass">
         <div className="wallet-top"><span className="wallet-account"><span className="mini-avatar">D</span><span>Основной счёт<small>Все активы</small></span></span><button className="icon-button" aria-label="Добавить счёт"><Plus size={18} /></button></div>
         <div className="wallet-balance"><span>Общий баланс</span><strong>128 430 <small>₽</small></strong><span className="gain"><ArrowUpRight size={14} /> 12,4% за полгода</span></div>
-        <PortfolioChart />
-        <div className="chart-months"><span>сен</span><span>окт</span><span>ноя</span><span>дек</span><span>янв</span><span>фев</span></div>
+        <PortfolioChart withControls />
         <div className="wallet-actions">
           <button><span><ArrowDownLeft size={17} /></span>Получить</button>
           <button className="action-dark"><span><Send size={16} /></span>Отправить</button>
@@ -101,17 +143,19 @@ function WalletPreview() {
 }
 
 function AllocationChart() {
+  const [selected, setSelected] = useState<string | null>(null)
+  const selectedAsset = assets.find((asset) => asset.symbol === selected)
   return (
     <div className="allocation-wrap">
       <svg viewBox="0 0 160 160" className="allocation-chart" role="img" aria-label="Пример распределения активов">
         <circle cx="80" cy="80" r="56" fill="none" stroke="rgba(255,255,255,.45)" strokeWidth="18" />
         {assets.map((asset, index) => {
-          const dash = `${asset.share} ${100 - asset.share}`
           const previousShare = assets.slice(0, index).reduce((sum, item) => sum + item.share, 0)
-          return <circle key={asset.symbol} cx="80" cy="80" r="56" fill="none" stroke={asset.color} strokeWidth="18" pathLength="100" strokeDasharray={dash} strokeDashoffset={-previousShare} />
+          const isSelected = selected === asset.symbol
+          return <circle className="allocation-segment" key={asset.symbol} cx="80" cy="80" r="56" fill="none" stroke={asset.color} strokeWidth={isSelected ? 23 : 18} opacity={selected == null || isSelected ? 1 : 0.38} pathLength="100" strokeDasharray={`${asset.share} ${100 - asset.share}`} strokeDashoffset={-previousShare} tabIndex={0} aria-label={`${asset.name}: ${asset.share}%`} onMouseEnter={() => setSelected(asset.symbol)} onMouseLeave={() => setSelected(null)} onFocus={() => setSelected(asset.symbol)} onBlur={() => setSelected(null)} />
         })}
       </svg>
-      <div className="allocation-center"><strong>4</strong><span>актива</span></div>
+      <div className="allocation-center"><strong>{selectedAsset ? `${selectedAsset.share}%` : '4'}</strong><span>{selectedAsset ? selectedAsset.name : 'актива'}</span></div>
     </div>
   )
 }
